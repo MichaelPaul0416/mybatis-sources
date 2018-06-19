@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--参考【D:\Program Files\IdeaProjects\mybatis-3-master\src\test\java\org\apache\ibatis\builder\CustomizedSettingsMapperConfig.xml】-->
+    <properties resource="com/wq/mybatis/source/demo/driver.properties"/>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="com/wq/mybatis/source/demo/OfficesMapper.xml"/>
+    </mappers>
+</configuration>
