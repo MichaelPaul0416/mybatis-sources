@@ -68,6 +68,13 @@ public class XMLStatementBuilder extends BaseBuilder {
     Class<?> parameterTypeClass = resolveClass(parameterType);
     String resultMap = context.getStringAttribute("resultMap");
     String resultType = context.getStringAttribute("resultType");
+    /**
+     *   <select id="selectRaw" resultType="Name" lang="raw">
+     *     SELECT firstName, lastName
+     *     FROM names
+     *     WHERE lastName LIKE #{name}
+     *   </select>
+     */
     String lang = context.getStringAttribute("lang");
     LanguageDriver langDriver = getLanguageDriver(lang);
 

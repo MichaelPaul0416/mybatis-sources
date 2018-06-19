@@ -103,15 +103,15 @@ public class XMLMapperBuilder extends BaseBuilder {
     return sqlFragments.get(refid);
   }
 
-  private void configurationElement(XNode context) {
+  private void configurationElement(XNode context) {//--> /mapper
     try {
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
-      cacheRefElement(context.evalNode("cache-ref"));
-      cacheElement(context.evalNode("cache"));
+      cacheRefElement(context.evalNode("cache-ref"));//将cache-ref与mapper的namespace属性绑定
+      cacheElement(context.evalNode("cache"));//设置缓存配置
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       resultMapElements(context.evalNodes("/mapper/resultMap"));
       sqlElement(context.evalNodes("/mapper/sql"));
@@ -200,9 +200,9 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (context != null) {
       String type = context.getStringAttribute("type", "PERPETUAL");
       Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
-      String eviction = context.getStringAttribute("eviction", "LRU");
+      String eviction = context.getStringAttribute("eviction", "LRU");//缓存淘汰算法，取值[LRU<最近最少使用>|FIFO<先进先出>|SOFT|WEAK]
       Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
-      Long flushInterval = context.getLongAttribute("flushInterval");
+      Long flushInterval = context.getLongAttribute("flushInterval");//刷新时间间隔
       Integer size = context.getIntAttribute("size");
       boolean readWrite = !context.getBooleanAttribute("readOnly", false);
       boolean blocking = context.getBooleanAttribute("blocking", false);
@@ -230,7 +230,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         String resultMap = parameterNode.getStringAttribute("resultMap");
         String mode = parameterNode.getStringAttribute("mode");
         String typeHandler = parameterNode.getStringAttribute("typeHandler");
-        Integer numericScale = parameterNode.getIntAttribute("numericScale");
+        Integer numericScale = parameterNode.getIntAttribute("numericScale");//小数保留位数[对于数值类型，还有一个小数保留位数的设置，来确定小数点后保留的位数。]
         ParameterMode modeEnum = resolveParameterMode(mode);
         Class<?> javaTypeClass = resolveClass(javaType);
         JdbcType jdbcTypeEnum = resolveJdbcType(jdbcType);
@@ -294,7 +294,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
   }
 
-//  resultType --> <resultMap id="addressMapper"type="org.apache.ibatis.submitted.column_prefix.Address">
+//  resultType --> <resultMap id="addressMapper" type="org.apache.ibatis.submitted.column_prefix.Address">
   private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) throws Exception {
     /**
      *     <constructor>
