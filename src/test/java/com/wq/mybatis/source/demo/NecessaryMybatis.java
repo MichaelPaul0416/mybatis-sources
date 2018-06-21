@@ -74,8 +74,9 @@ public class NecessaryMybatis {
         Reader reader = new InputStreamReader(Resources.getResourceAsStream("com/wq/mybatis/source/demo/CommonConfig.xml"));
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        OfficeMapper officeMapper = sqlSession.getMapper(OfficeMapper.class);
+        SqlSession sqlSession = sqlSessionFactory.openSession();//与数据库的会话，由datasource打开,CachingExecutor
+        OfficeMapper officeMapper = sqlSession.getMapper(OfficeMapper.class);//代理工厂产生的代理对象
+        System.out.println(officeMapper.getClass().getName());
         List<Map<String,String>> result = officeMapper.queryAllOffices();
         System.out.println(result);
 

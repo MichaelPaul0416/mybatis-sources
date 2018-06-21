@@ -408,7 +408,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void bindMapperForNamespace() {
-    String namespace = builderAssistant.getCurrentNamespace();
+    String namespace = builderAssistant.getCurrentNamespace();//获取mapper节点的namespace的属性值，作为mapper的代理对象存入缓存
     if (namespace != null) {
       Class<?> boundType = null;
       try {

@@ -1,6 +1,5 @@
 package com.wq.mybatis.source.proxy;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationHandler;

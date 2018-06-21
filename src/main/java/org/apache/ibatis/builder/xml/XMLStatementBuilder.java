@@ -198,7 +198,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     return true;
   }
 
-  private LanguageDriver getLanguageDriver(String lang) {
+  private LanguageDriver getLanguageDriver(String lang) {//RawLanguageDriver.class/XMLLanguageDriver.class
     Class<? extends LanguageDriver> langClass = null;
     if (lang != null) {
       langClass = resolveClass(lang);

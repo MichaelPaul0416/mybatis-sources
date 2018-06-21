@@ -76,7 +76,7 @@ public class ParamNameResolver {
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
-          name = String.valueOf(map.size());
+          name = String.valueOf(map.size());//除去RowBounds/ResultHandler之后的map的长度，作为value的属性值
         }
       }
       map.put(paramIndex, name);
@@ -110,7 +110,7 @@ public class ParamNameResolver {
    * ...).
    * </p>
    */
-  public Object getNamedParams(Object[] args) {
+  public Object getNamedParams(Object[] args) {//将代理方法的入参从数组形式转换为Map形式，key为参数的在方法签名中的下标，value为具体入参值
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
