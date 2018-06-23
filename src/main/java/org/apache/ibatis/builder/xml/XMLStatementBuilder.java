@@ -76,7 +76,7 @@ public class XMLStatementBuilder extends BaseBuilder {
      *   </select>
      */
     String lang = context.getStringAttribute("lang");
-    LanguageDriver langDriver = getLanguageDriver(lang);
+    LanguageDriver langDriver = getLanguageDriver(lang);//default is XMLLanguageDriver
 
     Class<?> resultTypeClass = resolveClass(resultType);
     String resultSetType = context.getStringAttribute("resultSetType");

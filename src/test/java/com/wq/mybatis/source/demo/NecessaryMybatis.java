@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -29,9 +30,40 @@ public class NecessaryMybatis {
 
     private SqlSessionFactory sqlSessionFactory;//DefaultSqlSessionFactory
 
+    @Before
+    public void init() throws IOException {
+        Reader reader = new InputStreamReader(Resources.getResourceAsStream("com/wq/mybatis/source/demo/CommonConfig.xml"));
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
+
+
+    /**
+     * mybatis二级缓存测试
+     */
     @Test
-    public void queryDemo() throws IOException{
-        loadFromConfigFile();
+    public void queryInDifferentSqlSession(){
+        SqlSession sqlSession1 = sqlSessionFactory.openSession();
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        OfficeMapper mapper1 = sqlSession1.getMapper(OfficeMapper.class);
+        OfficeMapper mapper2 = sqlSession2.getMapper(OfficeMapper.class);
+
+        System.out.println(mapper1.queryAllOffices());
+
+        System.out.println(mapper2.queryAllOffices());
+
+        System.out.println(mapper1.queryAllOffices());
+    }
+
+
+    @Test
+    public void queryDemo() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();//与数据库的会话，由datasource打开,CachingExecutor
+        OfficeMapper officeMapper = sqlSession.getMapper(OfficeMapper.class);//代理工厂产生的代理对象
+        System.out.println(officeMapper.getClass().getName());
+        List<Map<String,String>> result = officeMapper.queryAllOffices();
+        System.out.println(result);
+        List<Map<String,String>> again = officeMapper.queryAllOffices();
+        System.out.println(again);
     }
 
     @Test
@@ -42,6 +74,13 @@ public class NecessaryMybatis {
         List<Map<String,String>> result = officeMapper.queryAllList();
         System.out.println(result);
 
+    }
+
+    @Test
+    public void queryByChoose(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OfficeMapper officeMapper = sqlSession.getMapper(OfficeMapper.class);
+        System.out.println(officeMapper.queryById("4"));
     }
 
     private void loadWithConfigBean(){
@@ -68,18 +107,6 @@ public class NecessaryMybatis {
             e.printStackTrace();
         }
         return properties;
-    }
-
-    private void loadFromConfigFile() throws IOException {
-        Reader reader = new InputStreamReader(Resources.getResourceAsStream("com/wq/mybatis/source/demo/CommonConfig.xml"));
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-
-        SqlSession sqlSession = sqlSessionFactory.openSession();//与数据库的会话，由datasource打开,CachingExecutor
-        OfficeMapper officeMapper = sqlSession.getMapper(OfficeMapper.class);//代理工厂产生的代理对象
-        System.out.println(officeMapper.getClass().getName());
-        List<Map<String,String>> result = officeMapper.queryAllOffices();
-        System.out.println(result);
-
     }
 
     interface QueryAPI{

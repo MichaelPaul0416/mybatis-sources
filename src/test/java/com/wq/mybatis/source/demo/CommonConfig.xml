@@ -4,8 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+
     <!--参考【D:\Program Files\IdeaProjects\mybatis-3-master\src\test\java\org\apache\ibatis\builder\CustomizedSettingsMapperConfig.xml】-->
     <properties resource="com/wq/mybatis/source/demo/driver.properties"/>
+
+    <settings>
+        <!--取消一级sqlsession缓存-->
+        <!--<setting name="localCacheScope" value="STATEMENT"/>-->
+        <!--启用二级缓存，默认启用，同时还需要在mapper里面启用cache-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="com.wq.mybatis.source.demo.Offices" alias="Offices"/>
+    </typeAliases>
+
 
     <environments default="development">
         <environment id="development">

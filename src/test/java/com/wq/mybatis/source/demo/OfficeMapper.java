@@ -12,4 +12,6 @@ import java.util.Map;
 public interface OfficeMapper {
 
     List<Map<String,String>> queryAllOffices();
+
+    Offices queryById(String id);
 }

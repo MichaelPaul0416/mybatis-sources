@@ -3,19 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wq.mybatis.source.demo.OfficeMapper">
+    <cache type="com.wq.mybatis.source.demo.SimpleCustomCacheImpl"/>
+    <!--mybatis一级缓存在sqlsession中，二级缓存在mapper中-->
     <resultMap id="queryAll" type="java.util.Map">
         <id column="officeCode" property="officeCode" jdbcType="VARCHAR" javaType="string"/>
         <result column="city" property="city" javaType="string" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="addressLine1" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="addressLine2" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="state" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="country" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="postalCode" property="phone" javaType="string" jdbcType="VARCHAR"/>
-        <result column="territory" property="phone" javaType="string" jdbcType="VARCHAR"/>
+        <result column="addressLine1" property="addressLine1" javaType="string" jdbcType="VARCHAR"/>
+        <result column="addressLine2" property="addressLine2" javaType="string" jdbcType="VARCHAR"/>
+        <result column="state" property="state" javaType="string" jdbcType="VARCHAR"/>
+        <result column="country" property="country" javaType="string" jdbcType="VARCHAR"/>
+        <result column="postalCode" property="postalCode" javaType="string" jdbcType="VARCHAR"/>
+        <result column="territory" property="territory" javaType="string" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="queryAllOffices" resultMap="queryAll">
+    <resultMap id="queryByChoose" type="Offices">
+        <!--变更了列名，需要手动匹配-->
+        <id column="officecode" property="id" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="addressline1" property="address1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="addressline2" property="address2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="queryByChoose" parameterType="java.lang.String">
+        select * from offices where officecode = #{id}
+    </select>
+    <select id="queryAllOffices" resultMap="queryAll" useCache="true">
         select * from offices
     </select>
 </mapper>
