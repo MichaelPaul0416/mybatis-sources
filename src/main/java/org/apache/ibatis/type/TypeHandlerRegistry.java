@@ -375,14 +375,14 @@ public final class TypeHandlerRegistry {
 
   private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
     if (javaType != null) {
-      Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
+      Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);//处理javaType-->jdbcType-->TypeHandler的关联关系
       if (map == null || map == NULL_TYPE_HANDLER_MAP) {
         map = new HashMap<>();
         TYPE_HANDLER_MAP.put(javaType, map);
       }
       map.put(jdbcType, handler);
     }
-    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
+    ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);//Map<Class<?>,TypeHandler<?>>
   }
 
   //

@@ -213,6 +213,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void parameterMapElement(List<XNode> list) throws Exception {
     /**
+     *  类似于resultMap的作用，自定义一个参数接受对象
      *  <parameterMap id="selectAuthor" type="org.apache.ibatis.domain.blog.Author">
      * 		<parameter property="id" />
      * 	</parameterMap>

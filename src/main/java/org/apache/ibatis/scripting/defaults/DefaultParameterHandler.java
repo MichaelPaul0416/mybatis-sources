@@ -42,7 +42,7 @@ public class DefaultParameterHandler implements ParameterHandler {
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
-  private final BoundSql boundSql;
+  private final BoundSql boundSql;//解析select|insert|update|delete节点生成，开始于XmlMapperBuilder#configurationElement方法，先生成SqlSource对象，然后由子类具体实现生成BoundSql
   private final Configuration configuration;
 
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {

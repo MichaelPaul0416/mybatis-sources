@@ -36,6 +36,16 @@ public class NecessaryMybatis {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
+    /**
+     * TypeHandler测试
+     */
+    @Test
+    public void defaultTypeHandler(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrdersMapper ordersMapper = sqlSession.getMapper(OrdersMapper.class);
+        Orders orders = ordersMapper.queryByOrderid(10101);
+        System.out.println(orders);
+    }
 
     /**
      * mybatis二级缓存测试

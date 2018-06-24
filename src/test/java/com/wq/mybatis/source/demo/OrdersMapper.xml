@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mybatis.source.demo.OrdersMapper">
+    <resultMap id="OrdersResult" type="Orders">
+        <id jdbcType="INTEGER" javaType="Integer" property="orderid" column="orderNumber"/>
+        <result jdbcType="VARCHAR" javaType="java.util.Date" column="orderDate" property="orderDate"
+                typeHandler="com.wq.mybatis.source.demo.DefaultDateHandler"/>
+    </resultMap>
+
+
+    <select id="queryByOrderid" resultMap="OrdersResult">
+        select * from orders where ordernumber = #{orderid}
+    </select>
+</mapper>

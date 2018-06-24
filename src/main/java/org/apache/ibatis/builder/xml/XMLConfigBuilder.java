@@ -390,12 +390,12 @@ public class XMLConfigBuilder extends BaseBuilder {
           String javaTypeName = child.getStringAttribute("javaType");
           String jdbcTypeName = child.getStringAttribute("jdbcType");
           String handlerTypeName = child.getStringAttribute("handler");
-          Class<?> javaTypeClass = resolveClass(javaTypeName);
-          JdbcType jdbcType = resolveJdbcType(jdbcTypeName);
+          Class<?> javaTypeClass = resolveClass(javaTypeName);//TypeAliasRegistry#TYPE_ALIAS-->Map<String,Class<?>>
+          JdbcType jdbcType = resolveJdbcType(jdbcTypeName);//enum#JdbcType
           Class<?> typeHandlerClass = resolveClass(handlerTypeName);
           if (javaTypeClass != null) {
             if (jdbcType == null) {
-              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
+              typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);//javaTypeClass作为typeHandlerClass的构造器入参
             } else {
               typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
             }

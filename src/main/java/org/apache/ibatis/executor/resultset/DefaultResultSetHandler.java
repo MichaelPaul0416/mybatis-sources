@@ -184,9 +184,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Object> multipleResults = new ArrayList<>();
 
     int resultSetCount = 0;
-    ResultSetWrapper rsw = getFirstResultSet(stmt);
+    ResultSetWrapper rsw = getFirstResultSet(stmt);//包装对象，封装了ResultSet
 
-    List<ResultMap> resultMaps = mappedStatement.getResultMaps();
+    List<ResultMap> resultMaps = mappedStatement.getResultMaps();//对应解析mapper.xml，MapperBuilderAssistant#addMappedStatement-->line 290
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
@@ -197,10 +197,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultSetCount++;
     }
 
-    String[] resultSets = mappedStatement.getResultSets();
+    String[] resultSets = mappedStatement.getResultSets();//对应resultSets属性
     if (resultSets != null) {
       while (rsw != null && resultSetCount < resultSets.length) {
-        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);
+        /**
+         *   <select id="getNamesAndItemsLinked" statementType="CALLABLE" resultSets="names,items" resultMap="nameResultLinked">
+         *     {call sptest.getnamesanditems()}
+         *   </select>
+         */
+        ResultMapping parentMapping = nextResultMaps.get(resultSets[resultSetCount]);//参考SPMapper.xml
         if (parentMapping != null) {
           String nestedResultMapId = parentMapping.getNestedResultMapId();
           ResultMap resultMap = configuration.getResultMap(nestedResultMapId);
@@ -296,7 +301,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (parentMapping != null) {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
-        if (resultHandler == null) {
+        if (resultHandler == null) {//sqlSession调用CRUD方法时可以指定参数ResultHandler<T>,通过动态代理对象MapperProxy[InvocationHandler.invoke]方法传入改值
           DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
           multipleResults.add(defaultResultHandler.getResultList());

@@ -4,6 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+    <!--各个子标签出现顺序如下-->
+    <!--properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?-->
 
     <!--参考【D:\Program Files\IdeaProjects\mybatis-3-master\src\test\java\org\apache\ibatis\builder\CustomizedSettingsMapperConfig.xml】-->
     <properties resource="com/wq/mybatis/source/demo/driver.properties"/>
@@ -17,8 +19,12 @@
 
     <typeAliases>
         <typeAlias type="com.wq.mybatis.source.demo.Offices" alias="Offices"/>
+        <typeAlias type="com.wq.mybatis.source.demo.Orders" alias="Orders"/>
     </typeAliases>
 
+    <typeHandlers>
+        <typeHandler handler="com.wq.mybatis.source.demo.DefaultDateHandler" javaType="java.util.Date" jdbcType="VARCHAR"/>
+    </typeHandlers>
 
     <environments default="development">
         <environment id="development">
@@ -34,5 +40,6 @@
 
     <mappers>
         <mapper resource="com/wq/mybatis/source/demo/OfficesMapper.xml"/>
+        <mapper resource="com/wq/mybatis/source/demo/OrdersMapper.xml"/>
     </mappers>
 </configuration>

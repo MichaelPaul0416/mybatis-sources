@@ -287,7 +287,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .lang(lang)
         .resultOrdered(resultOrdered)
         .resultSets(resultSets)
-        .resultMaps(getStatementResultMaps(resultMap, resultType, id))
+        .resultMaps(getStatementResultMaps(resultMap, resultType, id))//对应select|update|insert|delete中的resultMap,resultType,id三个属性值
         .resultSetType(resultSetType)
         .flushCacheRequired(valueOrDefault(flushCache, !isSelect))
         .useCache(valueOrDefault(useCache, isSelect))
@@ -341,7 +341,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String[] resultMapNames = resultMap.split(",");
       for (String resultMapName : resultMapNames) {
         try {
-          resultMaps.add(configuration.getResultMap(resultMapName.trim()));
+          resultMaps.add(configuration.getResultMap(resultMapName.trim()));//对应mapper中的resultMap标签
         } catch (IllegalArgumentException e) {
           throw new IncompleteElementException("Could not find result map " + resultMapName, e);
         }
