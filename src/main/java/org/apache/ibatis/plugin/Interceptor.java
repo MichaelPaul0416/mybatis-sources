@@ -22,9 +22,9 @@ import java.util.Properties;
  */
 public interface Interceptor {
 
-  Object intercept(Invocation invocation) throws Throwable;
+  Object intercept(Invocation invocation) throws Throwable;//拦截器真正执行逻辑
 
-  Object plugin(Object target);
+  Object plugin(Object target);//拦截器将需要被拦截的对象进行代理
 
   void setProperties(Properties properties);
 

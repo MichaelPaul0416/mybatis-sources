@@ -28,14 +28,17 @@ public class PluginTest {
   @Test
   public void mapPluginShouldInterceptGet() {
     Map map = new HashMap();
-    map = (Map) new AlwaysMapPlugin().plugin(map);
+    System.out.println(map.getClass().getName());
+    map = (Map) new AlwaysMapPlugin().plugin(map);//获取代理对象
+    System.out.println(map.getClass().getName());
+    System.out.println(map.get("hello"));
     assertEquals("Always", map.get("Anything"));
   }
 
   @Test
   public void shouldNotInterceptToString() {
     Map map = new HashMap();
-    map = (Map) new AlwaysMapPlugin().plugin(map);
+    map = (Map) new AlwaysMapPlugin().plugin(map);//获取代理对象
     assertFalse("Always".equals(map.toString()));
   }
 

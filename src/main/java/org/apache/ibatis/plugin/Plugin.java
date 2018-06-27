@@ -41,9 +41,9 @@ public class Plugin implements InvocationHandler {
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
-    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
+    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);//获取interceptor拦截器头上使用@Signature注解标注的方法信息class--method--args
     Class<?> type = target.getClass();
-    Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
+    Class<?>[] interfaces = getAllInterfaces(type, signatureMap);//从type一直查到最终的父类Object，看这个type实现了@Signature注解type标注的哪些接口
     if (interfaces.length > 0) {
       return Proxy.newProxyInstance(
           type.getClassLoader(),
@@ -77,7 +77,7 @@ public class Plugin implements InvocationHandler {
     for (Signature sig : sigs) {
       Set<Method> methods = signatureMap.computeIfAbsent(sig.type(), k -> new HashSet<>());
       try {
-        Method method = sig.type().getMethod(sig.method(), sig.args());
+        Method method = sig.type().getMethod(sig.method(), sig.args());//只能返回所有公有public的方法
         methods.add(method);
       } catch (NoSuchMethodException e) {
         throw new PluginException("Could not find method on " + sig.type() + " named " + sig.method() + ". Cause: " + e, e);
@@ -94,7 +94,7 @@ public class Plugin implements InvocationHandler {
           interfaces.add(c);
         }
       }
-      type = type.getSuperclass();
+      type = type.getSuperclass();//查找父类类型
     }
     return interfaces.toArray(new Class<?>[interfaces.size()]);
   }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mybatis.source.demo.CustomerMapper">
+    <!--开启二级缓存-->
+    <cache/>
+    <resultMap id="SingleCustomer" type="Customer">
+        <constructor>
+            <!--name属性值对应构造器方法入参的@Param注解的value属性-->
+            <idArg column="customerNumber" javaType="java.lang.Integer" name="customerId"/>
+            <arg column="contactFirstName" javaType="java.lang.String"  name="firstName"/>
+            <arg column="contactLastName" javaType="java.lang.String" name="lastName"/>
+            <arg column="addressLine1" javaType="java.lang.String" name="address1" typeHandler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
+            <arg column="addressLine2" javaType="java.lang.String" name="address2" typeHandler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="customerOrders" type="com.wq.mybatis.source.demo.CustomerOrders">
+        <association property="customer" javaType="Customer">
+            <constructor>
+                <idArg column="customerNumber" javaType="int"/>
+                <arg column="contactFirstName" javaType="java.lang.String"/>
+                <arg column="contactLastName" javaType="java.lang.String"/>
+                <arg column="addressLine1" javaType="java.lang.String" typeHandler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
+                <arg column="addressLine2" javaType="java.lang.String" typeHandler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
+            </constructor>
+            <result property="customerName" column="customerName"/>
+            <result property="phone" column="phone"/>
+            <result property="city" column="city"/>
+            <result property="state" column="state"/>
+            <result property="postalCode" column="postalCode"/>
+            <result property="country" column="country"/>
+            <result property="salesRepEmployeeNumber" column="salesRepEmployeeNumber"/>
+            <result property="creditLimit" column="creditLimit"/>
+        </association>
+        <collection property="orders"  ofType="Orders">
+            <id jdbcType="INTEGER" javaType="Integer" property="orderid" column="orderNumber"/>
+            <result jdbcType="VARCHAR" javaType="java.util.Date" column="orderDate" property="orderDate"
+                    typeHandler="com.wq.mybatis.source.demo.DefaultDateHandler"/>
+            <result jdbcType="DATE" column="requiredDate" property="requiredDate"/>
+            <result jdbcType="DATE" column="shippedDate" property="shippedDate"/>
+            <result jdbcType="VARCHAR" column="status" property="status"/>
+            <result jdbcType="VARCHAR" column="comments" property="comments"/>
+            <result column="customerNumber" property="customerNumber"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryTotalCustomer" resultMap="SingleCustomer">
+        select * from customers
+    </select>
+
+    <select id="queryByCustomerId" resultMap="SingleCustomer">
+        select * from customers where customerNumber = #{id}
+    </select>
+
+    <select id="queryOrdersByCustomerId" resultMap="customerOrders">
+        select a.customerNumber,a.customerName,a.contactLastName,a.contactFirstName,a.phone,a.addressLine1,a.addressLine2,a.city,a.state,a.postalCode,a.country,a.salesRepEmployeeNumber,a.creditLimit,
+        b.orderNumber,b.orderdate,b.requireddate,b.shippeddate,b.status,b.comments from customers a,orders b
+        where a.customerNumber = b.customerNumber and a.customerNumber = #{id}
+    </select>
+
+    <!--当dao接口中如果参数个数大于1，下列参数如果不指定parameterType得话，那么在sql中使用变量需要根据指定的dao接口入参中参数的顺序进行使用，
+    参见【ParamNameResolver#getNamedParams+BaseExecutor#createCacheKey】，写法为#{arg0}/#{param0}，但是@RowBound/@ResultHandler注解标记的不计入下标顺序-->
+    <!--还有一种写法是在dao接口的入参前面加上@Param("special"),然后在sql中使用#{special}-->
+    <!--select * from customers where creditLimit &gt; #{special}-->
+    <select id="queryCustomersByPager" resultMap="SingleCustomer">
+        select * from customers where creditLimit &gt; #{creditLimit}
+    </select>
+</mapper>

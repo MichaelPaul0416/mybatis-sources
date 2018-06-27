@@ -1,5 +1,8 @@
 package com.wq.mybatis.source.demo;
 
+import com.google.gson.Gson;
+import com.wq.mybatis.source.demo.plugins.DefaultPager;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -30,11 +33,56 @@ public class NecessaryMybatis {
 
     private SqlSessionFactory sqlSessionFactory;//DefaultSqlSessionFactory
 
+    private Gson gson;
+
     @Before
     public void init() throws IOException {
         Reader reader = new InputStreamReader(Resources.getResourceAsStream("com/wq/mybatis/source/demo/CommonConfig.xml"));
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        gson = new Gson();
     }
+
+    @Test
+    public void customerPagerPlugin(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+        DefaultPager defaultPager = new DefaultPager();
+        defaultPager.setCurrentPage(1);
+        List<Customer> customers = customerMapper.queryCustomersByPager(30000,defaultPager);
+        System.out.println(gson.toJson(customers));
+    }
+
+    @Test
+    public void queryCustomerOrders(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+        List<CustomerOrders> list = customerMapper.queryOrdersByCustomerId(496);
+        System.out.println(gson.toJson(list));
+    }
+
+
+
+    /**
+     * Customer
+     */
+    @Test
+    public void queryCustomers(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+        List<Customer> customers = customerMapper.queryTotalCustomer();
+        System.out.println(customers.size());
+
+        Customer customer = customerMapper.queryByCustomerId(496);
+        System.out.println(customer);
+        sqlSession.close();
+
+        //二级缓存测试，前一个sqlsession必须先关闭
+        SqlSession session = sqlSessionFactory.openSession();
+        CustomerMapper customerMapper1 = session.getMapper(CustomerMapper.class);
+        System.out.println(customerMapper1.queryByCustomerId(496));
+        session.close();
+    }
+
 
     /**
      * TypeHandler测试

@@ -32,13 +32,13 @@ import org.apache.ibatis.session.RowBounds;
 /**
  * @author Clinton Begin
  */
-public class RoutingStatementHandler implements StatementHandler {
+public class RoutingStatementHandler implements StatementHandler {//装饰器模式，做一些预处理，但是真正的功能交给内部的StatementHandler处理
 
   private final StatementHandler delegate;
 
   public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 
-    switch (ms.getStatementType()) {
+    switch (ms.getStatementType()) {//默认就是PREPARED，除非在select|update|delete|insert中指定statementType的属性值
       case STATEMENT:
         delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;

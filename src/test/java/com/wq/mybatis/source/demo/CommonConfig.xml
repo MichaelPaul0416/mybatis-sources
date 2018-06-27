@@ -10,22 +10,30 @@
     <!--参考【D:\Program Files\IdeaProjects\mybatis-3-master\src\test\java\org\apache\ibatis\builder\CustomizedSettingsMapperConfig.xml】-->
     <properties resource="com/wq/mybatis/source/demo/driver.properties"/>
 
-    <settings>
+    <!--<settings>-->
         <!--取消一级sqlsession缓存-->
         <!--<setting name="localCacheScope" value="STATEMENT"/>-->
         <!--启用二级缓存，默认启用，同时还需要在mapper里面启用cache-->
-        <setting name="cacheEnabled" value="true"/>
-    </settings>
+        <!--<setting name="cacheEnabled" value="true"/>-->
+    <!--</settings>-->
 
     <typeAliases>
         <typeAlias type="com.wq.mybatis.source.demo.Offices" alias="Offices"/>
         <typeAlias type="com.wq.mybatis.source.demo.Orders" alias="Orders"/>
+        <typeAlias type="com.wq.mybatis.source.demo.Customer" alias="Customer"/>
     </typeAliases>
 
     <typeHandlers>
         <typeHandler handler="com.wq.mybatis.source.demo.DefaultDateHandler" javaType="java.util.Date" jdbcType="VARCHAR"/>
+        <typeHandler handler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
     </typeHandlers>
 
+    <plugins>
+        <plugin interceptor="com.wq.mybatis.source.demo.plugins.QueryPagePlugin">
+            <property name="queryPageSize" value="3"/>
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -41,5 +49,6 @@
     <mappers>
         <mapper resource="com/wq/mybatis/source/demo/OfficesMapper.xml"/>
         <mapper resource="com/wq/mybatis/source/demo/OrdersMapper.xml"/>
+        <mapper resource="com/wq/mybatis/source/demo/CustomerMapper.xml"/>
     </mappers>
 </configuration>

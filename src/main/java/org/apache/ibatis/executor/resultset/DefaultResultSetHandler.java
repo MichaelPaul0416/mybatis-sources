@@ -186,7 +186,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     int resultSetCount = 0;
     ResultSetWrapper rsw = getFirstResultSet(stmt);//包装对象，封装了ResultSet
 
-    List<ResultMap> resultMaps = mappedStatement.getResultMaps();//对应解析mapper.xml，MapperBuilderAssistant#addMappedStatement-->line 290
+    List<ResultMap> resultMaps = mappedStatement.getResultMaps();//对应解析mapper.xml的resultMap标签，MapperBuilderAssistant#addMappedStatement-->line 290
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
@@ -302,7 +302,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
         if (resultHandler == null) {//sqlSession调用CRUD方法时可以指定参数ResultHandler<T>,通过动态代理对象MapperProxy[InvocationHandler.invoke]方法传入改值
-          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
+          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);//来自于XMLConfigBuilder#objectFactoryElement方法，解析objectFactory标签生成对应对象
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
           multipleResults.add(defaultResultHandler.getResultList());
         } else {
@@ -401,7 +401,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       boolean foundValues = this.useConstructorMappings;
       if (shouldApplyAutomaticMappings(resultMap, false)) {
-        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
+        foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;//自动装配的属性
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
@@ -499,7 +499,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
           final Class<?> propertyType = metaObject.getSetterType(property);
           if (typeHandlerRegistry.hasTypeHandler(propertyType, rsw.getJdbcType(columnName))) {
-            final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
+            final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);//根据java的属性对应的Class以及数据库中得列名找到对应的TypeHandler
             autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive()));
           } else {
             configuration.getAutoMappingUnknownColumnBehavior()
@@ -520,7 +520,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
-        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);//查找各个绑定的typeHandler
         if (value != null) {
           foundValues = true;
         }
@@ -592,10 +592,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Object> constructorArgs = new ArrayList<>();
     Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
-      final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
+      final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();//<resultMap/>标签的各个子标签
       for (ResultMapping propertyMapping : propertyMappings) {
         // issue gcode #109 && issue #149
-        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {
+        if (propertyMapping.getNestedQueryId() != null && propertyMapping.isLazy()) {//association|collection子标签有lazy属性
           resultObject = configuration.getProxyFactory().createProxy(resultObject, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
           break;
         }
