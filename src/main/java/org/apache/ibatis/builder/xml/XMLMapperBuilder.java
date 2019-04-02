@@ -91,6 +91,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
+      //当前mapper的namespace代表的class作为key，MapperProxyFactory作为value，存入MapperRegistry，托管在Configuration中
       bindMapperForNamespace();
     }
 

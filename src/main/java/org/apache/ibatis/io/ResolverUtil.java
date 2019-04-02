@@ -89,6 +89,7 @@ public class ResolverUtil<T> {
     /** Returns true if type is assignable to the parent type supplied in the constructor. */
     @Override
     public boolean matches(Class<?> type) {
+      //type代表的class是parent代表的class的子类或者是它本身
       return type != null && parent.isAssignableFrom(type);
     }
 

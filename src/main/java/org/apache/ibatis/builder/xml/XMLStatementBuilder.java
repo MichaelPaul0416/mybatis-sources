@@ -96,8 +96,8 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     // Parse selectKey after includes and remove them.
     processSelectKeyNodes(id, parameterTypeClass, langDriver);
-    
-    // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)
+
+    // Parse the SQL (pre: <selectKey> and <include> were parsed and removed)，内部其实是List<SqlNode>
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
     String resultSets = context.getStringAttribute("resultSets");
     String keyProperty = context.getStringAttribute("keyProperty");
@@ -115,7 +115,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
-        resultSetTypeEnum, flushCache, useCache, resultOrdered, 
+        resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
 
@@ -177,6 +177,13 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
   }
 
+    /**
+     *
+     * @param id insert的id
+     * @param databaseId selectKey的databaseId
+     * @param requiredDatabaseId configuration的databaseId，其实就是environment的id
+     * @return
+     */
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       if (!requiredDatabaseId.equals(databaseId)) {

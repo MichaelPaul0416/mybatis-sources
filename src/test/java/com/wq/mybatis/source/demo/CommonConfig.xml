@@ -21,6 +21,7 @@
         <typeAlias type="com.wq.mybatis.source.demo.Offices" alias="Offices"/>
         <typeAlias type="com.wq.mybatis.source.demo.Orders" alias="Orders"/>
         <typeAlias type="com.wq.mybatis.source.demo.Customer" alias="Customer"/>
+        <typeAlias type="com.wq.mybatis.source.demo.Demo" alias="Demo"/>
     </typeAliases>
 
     <typeHandlers>
@@ -28,12 +29,12 @@
         <typeHandler handler="com.wq.mybatis.source.demo.DefaultNullValueHandler"/>
     </typeHandlers>
 
-    <plugins>
-        <plugin interceptor="com.wq.mybatis.source.demo.plugins.QueryPagePlugin">
-            <property name="queryPageSize" value="3"/>
-            <property name="dialect" value="mysql"/>
-        </plugin>
-    </plugins>
+    <!--<plugins>-->
+        <!--<plugin interceptor="com.wq.mybatis.source.demo.plugins.QueryPagePlugin">-->
+            <!--<property name="queryPageSize" value="3"/>-->
+            <!--<property name="dialect" value="mysql"/>-->
+        <!--</plugin>-->
+    <!--</plugins>-->
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -50,5 +51,6 @@
         <mapper resource="com/wq/mybatis/source/demo/OfficesMapper.xml"/>
         <mapper resource="com/wq/mybatis/source/demo/OrdersMapper.xml"/>
         <mapper resource="com/wq/mybatis/source/demo/CustomerMapper.xml"/>
+        <mapper resource="com/wq/mybatis/source/demo/DemoMapper.xml"/>
     </mappers>
 </configuration>

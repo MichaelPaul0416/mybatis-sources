@@ -132,6 +132,7 @@ public class TypeAliasRegistry {
     for(Class<?> type : typeSet){
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
+      //不是匿名类，不是借口，也不是内部类
       if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
         registerAlias(type);
       }
@@ -141,6 +142,7 @@ public class TypeAliasRegistry {
   public void registerAlias(Class<?> type) {
     String alias = type.getSimpleName();
     Alias aliasAnnotation = type.getAnnotation(Alias.class);
+    //有注解的话取注解对应的value的值
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
     } 

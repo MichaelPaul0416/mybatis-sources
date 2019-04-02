@@ -289,6 +289,7 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <T> T getMapper(Class<T> type) {
+    //生成接口的代理对象，包含了SqlSession
     return configuration.<T>getMapper(type, this);
   }
 

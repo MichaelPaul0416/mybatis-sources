@@ -2,7 +2,6 @@ package com.wq.mybatis.source.demo;
 
 import com.google.gson.Gson;
 import com.wq.mybatis.source.demo.plugins.DefaultPager;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.io.Resources;
@@ -34,6 +33,33 @@ public class NecessaryMybatis {
     private SqlSessionFactory sqlSessionFactory;//DefaultSqlSessionFactory
 
     private Gson gson;
+
+    @Test
+    public void testDemo(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DemoMapper demo = sqlSession.getMapper(DemoMapper.class);
+        System.out.println(demo.queryList());
+    }
+
+    public static void main(String args[]){
+        Thread thread = new Thread(() -> {
+            try {
+                SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(new InputStreamReader(Resources.getResourceAsStream("com/wq/mybatis/source/demo/CommonConfig.xml")));
+                SqlSession sqlSession = sqlSessionFactory.openSession();
+                CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+                DefaultPager defaultPager = new DefaultPager();
+                defaultPager.setCurrentPage(2);
+                List<Customer> customers = customerMapper.queryCustomersByPager(30000,defaultPager);
+                System.out.println(new Gson().toJson(customers));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        });
+        while (true){
+
+        }
+    }
 
     @Before
     public void init() throws IOException {

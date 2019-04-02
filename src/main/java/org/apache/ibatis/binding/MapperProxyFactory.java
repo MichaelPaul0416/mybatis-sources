@@ -27,7 +27,7 @@ import org.apache.ibatis.session.SqlSession;
  */
 public class MapperProxyFactory<T> {
 
-  private final Class<T> mapperInterface;
+  private final Class<T> mapperInterface;//actually proxy-object's class,and it's an interface in general
   private final Map<Method, MapperMethod> methodCache = new ConcurrentHashMap<>();
 
   public MapperProxyFactory(Class<T> mapperInterface) {
@@ -47,7 +47,7 @@ public class MapperProxyFactory<T> {
     return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[] { mapperInterface }, mapperProxy);
   }
 
-  public T newInstance(SqlSession sqlSession) {
+  public T newInstance(SqlSession sqlSession) {//create a proxy object with a SqlSession to database
     final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSession, mapperInterface, methodCache);
     return newInstance(mapperProxy);
   }
