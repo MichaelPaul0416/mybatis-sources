@@ -16,6 +16,17 @@
         employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle
     </sql>
     <select id="queryAllEmployee" resultMap="employeeMap" statementType="PREPARED">
-        select <include refid="employeeColumn"/> from employees
+        select
+        <include refid="employeeColumn"/>
+        from employees
+    </select>
+
+    <select id="conditionQuery" resultMap="employeeMap" useCache="true" parameterType="employeeModel">
+        select employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle from employees
+        <where>
+            <if test="officeCode != null and !&quot;&quot;.equals(officeCode)">
+                officeCode &gt;= #{officeCode}
+            </if>
+        </where>
     </select>
 </mapper>

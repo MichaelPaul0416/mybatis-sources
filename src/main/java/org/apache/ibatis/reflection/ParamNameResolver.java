@@ -86,6 +86,9 @@ public class ParamNameResolver {
 
   private String getActualParamName(Method method, int paramIndex) {
     if (Jdk.parameterExists) {
+      /**
+       * arg0,arg1....
+       */
       return ParamNameUtil.getParamNames(method).get(paramIndex);
     }
     return null;

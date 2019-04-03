@@ -1,6 +1,7 @@
 package com.wq.mybatis.core.dao;
 
 import com.wq.mybatis.core.model.Employee;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ import java.util.List;
 public interface EmployeeDao {
 
     List<Employee> queryAllEmployee();
+
+    List<Employee> conditionQuery(Employee employee, RowBounds page);
 }
